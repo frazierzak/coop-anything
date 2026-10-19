@@ -236,3 +236,61 @@ Goal from here: port Witcher Online to 5.01, then work toward shared enemies and
 
 - A join between two real Steam accounts on two PCs (relay latency, invite and Join Game flow).
 - Chat, emotes, horses, party/dialog sync on 5.01 (not exercised by the bots yet).
+
+## Session 2026-10-19: Phase 2 workspace on owner PC (GOG)
+
+Local worker on witcher-pc. Approvals already given: test copy, pinned zip, Java 21+.
+
+### Observations (checked directly)
+
+- Store is **GOG Galaxy**, not Steam. Live install:
+  `%ProgramFiles(x86)%\GOG Galaxy\Games\The Witcher 3 Wild Hunt`
+  (GOG gameId `1207664643`, buildId `60108127192862982`). Steam app `292030` is not installed.
+- Exe `%ProgramFiles(x86)%\...\bin\x64_dx12\witcher3.exe`: FileVersion `5.0.0.1048522(Build Machine)`,
+  SHA-256 `2df765398a3d1f165db418271be7200178320a4466817379f2fa0dc0001fb101` — **exact match** to the
+  prior Steam Remastered 5.01 reference. Layout is Remastered (`bin\x64_dx12`, no `bin\x64`).
+- Live install size ~60.5 GB; `content\content0` ~58.7 GB. Free space on C: was ample (~296 GB).
+- Robocopy `/MIR` of live → `%USERPROFILE%\coop-test\witcher-3\game` completed: 1770 files,
+  60.512 GB, robocopy exit 1 (success). Test exe hash matches live. Live folder left unmodified
+  (no `dinput8.dll` / `modWitcherOnline` there after install).
+- Java was missing; installed Temurin 21 via winget (`EclipseAdoptium.Temurin.21.JDK`).
+  `java -version`: `openjdk version "21.0.12.1" 2026-08-18 LTS` (Temurin-21.0.12.1+1).
+- Downloaded pinned
+  `https://github.com/Emillock/witcher3-coop/releases/download/v0.1.0/W3Coop-0.1.0.zip`
+  to `%USERPROFILE%\coop-test\witcher-3\downloads\`. Size 162976702 bytes. SHA-256
+  `40f5fe664dcd46a557d49591a9954b403d30868f2ef59be806bcf6c2f580f43e` — **OK**.
+- Expanded zip into **test copy only**. Present: `bin\w3coop\Host co-op.cmd`, `Join co-op.cmd`,
+  `w3relay.exe`, `server\WitcherServer.jar`; `bin\x64_dx12\dinput8.dll`,
+  `WitcherNativeBridge.asi`, `WitcherOnlineClient.asi`; `mods\modWitcherOnline`,
+  `mods\modWitcherOnlineCompat`; `dlc\dlcWitcherOnline`; `W3Coop\README.txt`.
+- GOG `bin\x64_dx12` has **no** `steam_api64.dll` (has `Galaxy64.dll` / `REDGalaxy64.dll` instead).
+  W3Coop package does not ship `steam_api64.dll`. `w3relay.exe` strings expect `steam_api64.dll`
+  next to the relay or under `--game-dir` / `x64_dx12`. Package README requires Steam 5.01.
+- Steam client is installed and was running. Other Steam games on this PC do ship
+  `steam_api64.dll`; one checked copy (Enshrouded) reports FileVersion `10.87.46.89` with
+  `SteamAPI_InitFlat` and `SteamNetworkingMessages_SteamAPI_v002` strings — same version line as
+  the prior Steam Witcher 3 notes. **Not copied** into the test folder (needs owner approval).
+- `%USERPROFILE%\Documents\The Witcher 3` does not exist yet (no saves / settings tree found under
+  Documents or Saved Games for this title).
+
+### Derived
+
+- Binary line matches Remastered 5.01; script/ASI install into the test copy is ready.
+- Host/Join smoke is **blocked on GOG** until a compatible `steam_api64.dll` is available in the
+  test `bin\x64_dx12` (or the owner installs the Steam edition), because the Spacewar relay loads
+  that DLL. Copying a DLL from another Steam game was not done without asking.
+
+### Unknowns
+
+- Whether placing another game’s `steam_api64.dll` (same 10.87.46.89 line) into the GOG test
+  `bin\x64_dx12` makes `w3relay` Host/Join work end-to-end with this GOG exe.
+- Whether launching `witcher3.exe` from the test folder (not “from Steam”) still loads the ASIs
+  and connects to a local relay the same way the Steam-launched path does.
+- Real two-account / two-PC friend join (still the open QA gap).
+
+### Not done (by design)
+
+- Did not run `Host co-op.cmd` / `Join co-op.cmd` (would init Steam as Spacewar / need interactive
+  name + Steam account use beyond launch readiness).
+- Did not contact friends or publish.
+- Private fill-in: `local/identity.md`, `local/phase2-runbook.md` (gitignored).
