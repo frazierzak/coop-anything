@@ -281,3 +281,30 @@ agent environment; identity for Zak's PC left in `local/identity.md` (gitignored
 2. Approve test-folder copy + pinned W3Coop download.
 3. Host+join smoke with friends (real Steam accounts) — first gap the bots did not cover.
 4. Only after that: extend toward shared combat/quests (separate phase).
+
+## Session 2026-10-19 (later): Phase 2 workspace prep (no local PC)
+
+Owner approved: copy install → test folder, download pinned W3Coop `v0.1.0`, Java 21+.
+Still unknown: store, 5.01 confirmation, Steam friend for two-PC smoke. No self-hosted
+Cursor worker connected; cloud cannot touch the real install.
+
+### Observations
+
+- Followed `playbook/methods.md` §2 (isolated test install) + W3Coop package README
+  (`Host co-op.cmd` / `Join co-op.cmd`, Java 21+ host-only, Spacewar relay).
+- **Did not** download the zip or install Java in this environment (prep only).
+- User-facing steps written outside the fork store doc path used by the project
+  coordinator; fork NOTES updated here. Private path templates in gitignored `local/`
+  (`identity.md`, `phase2-runbook.md`).
+
+### Derived
+
+- Phase 2 execution is **owner-local or future local worker** only until a machine with
+  the game is available.
+- Suggested test root: `%USERPROFILE%\coop-test\witcher-3\game`; downloads beside it.
+- Stop condition unchanged: identity must match Remastered 5.01 before installing W3Coop.
+
+### Unknowns
+
+- Zak's store, buildid, exe SHA-256.
+- Whether GOG/Epic builds match the Steam-tested W3Coop pin (unknown until checked).
