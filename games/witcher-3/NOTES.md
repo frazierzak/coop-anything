@@ -294,3 +294,19 @@ Local worker on witcher-pc. Approvals already given: test copy, pinned zip, Java
   name + Steam account use beyond launch readiness).
 - Did not contact friends or publish.
 - Private fill-in: `local/identity.md`, `local/phase2-runbook.md` (gitignored).
+
+## Session 2026-10-19 (later): steam_api64 + Host relay smoke
+
+Owner approved placing a Steam API DLL in the test folder and Host use of Steam.
+
+### Observations
+
+- Copied `steam_api64.dll` FileVersion `10.87.46.89` into **test only**
+  `%USERPROFILE%\coop-test\witcher-3\game\bin\x64_dx12\` (not into the live GOG install).
+  SHA-256 `e6d9bafb9a41e42fba7b21553db49f8719027af3f0deb23ff86cfc44d60e776d`. Live still has no copy.
+- Ran `w3relay.exe host` against the test game dir (non-interactive). Result within ~1 s:
+  - Witcher Online server on UDP 40000
+  - Steam init as AppID **480** (Spacewar) — stderr minidump line confirms
+  - `Lobby ready: <lobby-id>` with join hint `w3relay join --lobby <id>`
+- Stopped the host after the smoke. Did **not** launch `witcher3.exe` or a second Steam client.
+- Two-PC / friend Join still untested.
