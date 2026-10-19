@@ -236,3 +236,75 @@ Goal from here: port Witcher Online to 5.01, then work toward shared enemies and
 
 - A join between two real Steam accounts on two PCs (relay latency, invite and Join Game flow).
 - Chat, emotes, horses, party/dialog sync on 5.01 (not exercised by the bots yet).
+
+## Session 2026-10-19: Phase 0 triage for Zak Frazier
+
+Goal: Zak plays Remastered with friends. Fork: `frazierzak/coop-anything` (synced to
+`main` at `bffd56f`). Upstream hub: `cranebeaker/coop-anything`. No game install in this
+agent environment; identity for Zak's PC left in `local/identity.md` (gitignored).
+
+### Observations (checked this session)
+
+- Directory lists six W3 projects; Remastered-relevant usable path is **W3Coop**
+  (Emillock/witcher3-coop), pre-release `v0.1.0`, pushed 2026-10-18. Asset
+  `W3Coop-0.1.0.zip` SHA-256 `40f5fe664dcd46a557d49591a9954b403d30868f2ef59be806bcf6c2f580f43e`
+  (from GitHub release API; zip not downloaded this session).
+- Upstream PR [#15](https://github.com/cranebeaker/coop-anything/pull/15)
+  (write-up + directory + QA lessons) is CLOSED/merged. Fork already has
+  `games/witcher-3/{README,NOTES}.md` from that work. No open Witcher PRs/issues on
+  upstream; fork has **issues disabled**.
+- W3Coop open issue #1 title only ("this is awesome!"); not treated as technical status.
+- Official Remastered patch 5.01 is live (CDPR news 2026-10-08) on Steam/GOG/Epic/Battle.net
+  and consoles: https://www.thewitcher.com/us/en/news/52085/patch-5-01-for-the-witcher-3-wild-hunt-remastered-is-live
+- `gh issue list --search witcher` on the fork fails (issues disabled). Upstream search:
+  no open Witcher issues.
+
+### Derived
+
+- **Path: revive / finish existing** — specifically adopt and stress-test **W3Coop**
+  (Witcher Online ported to 5.01 + Steam Spacewar relay), not build from zero. Matches
+  AGENTS triage: abandoned/partial co-op exists and is the best start.
+- Public Witcher Online (4.04) and native-address mods (w3m) are the wrong target for
+  Remastered 5.x unless Zak deliberately rolls back to Steam "Patch 4.04".
+- Story co-op (shared enemies/quests) is still **not started** on any project; friends can
+  share presence/travel only with current W3Coop scope.
+
+### Unknowns (block play with Zak's friends)
+
+- Zak's store, build id, exe SHA-256 (must match 5.01 write-up or stop).
+- Whether Zak already has a test copy; Java 21+; friends on Steam for two-PC relay test.
+- Permission to download the player package and copy the install (AGENTS ground rules).
+
+### Decision for owner
+
+1. Confirm Remastered **5.01** on his store.
+2. Approve test-folder copy + pinned W3Coop download.
+3. Host+join smoke with friends (real Steam accounts) — first gap the bots did not cover.
+4. Only after that: extend toward shared combat/quests (separate phase).
+
+## Session 2026-10-19 (later): Phase 2 workspace prep (no local PC)
+
+Owner approved: copy install → test folder, download pinned W3Coop `v0.1.0`, Java 21+.
+Still unknown: store, 5.01 confirmation, Steam friend for two-PC smoke. No self-hosted
+Cursor worker connected; cloud cannot touch the real install.
+
+### Observations
+
+- Followed `playbook/methods.md` §2 (isolated test install) + W3Coop package README
+  (`Host co-op.cmd` / `Join co-op.cmd`, Java 21+ host-only, Spacewar relay).
+- **Did not** download the zip or install Java in this environment (prep only).
+- User-facing steps written outside the fork store doc path used by the project
+  coordinator; fork NOTES updated here. Private path templates in gitignored `local/`
+  (`identity.md`, `phase2-runbook.md`).
+
+### Derived
+
+- Phase 2 execution is **owner-local or future local worker** only until a machine with
+  the game is available.
+- Suggested test root: `%USERPROFILE%\coop-test\witcher-3\game`; downloads beside it.
+- Stop condition unchanged: identity must match Remastered 5.01 before installing W3Coop.
+
+### Unknowns
+
+- Zak's store, buildid, exe SHA-256.
+- Whether GOG/Epic builds match the Steam-tested W3Coop pin (unknown until checked).
